@@ -1,6 +1,6 @@
 # Project Description
 
-**Deployed Frontend URL:** [TODO: Add your Vercel deployment URL here]
+**Deployed Frontend URL:** https://ckayzvoting.vercel.app/
 
 **Solana Program ID:** `BmYR9dVbJmmDyvucVymQTNzFB7hRq5iuWFxq1i8RePvD`
 
