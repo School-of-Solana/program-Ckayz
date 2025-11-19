@@ -1,0 +1,417 @@
+{
+  "address": "BmYR9dVbJmmDyvucVymQTNzFB7hRq5iuWFxq1i8RePvD",
+  "metadata": {
+    "name": "voting_program",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "cast_vote",
+      "docs": [
+        "Cast votes in an election"
+      ],
+      "discriminator": [
+        20,
+        212,
+        15,
+        189,
+        69,
+        180,
+        69,
+        151
+      ],
+      "accounts": [
+        {
+          "name": "election",
+          "writable": true
+        },
+        {
+          "name": "voter_ballot",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  111,
+                  116,
+                  101,
+                  114,
+                  95,
+                  98,
+                  97,
+                  108,
+                  108,
+                  111,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "election"
+              },
+              {
+                "kind": "account",
+                "path": "voter"
+              }
+            ]
+          }
+        },
+        {
+          "name": "voter",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "positive_vote_indices",
+          "type": "bytes"
+        },
+        {
+          "name": "negative_vote_indices",
+          "type": "bytes"
+        }
+      ]
+    },
+    {
+      "name": "close_election",
+      "docs": [
+        "Close an election (only authority can do this)"
+      ],
+      "discriminator": [
+        62,
+        216,
+        57,
+        149,
+        90,
+        21,
+        40,
+        127
+      ],
+      "accounts": [
+        {
+          "name": "election",
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "get_election_results",
+      "docs": [
+        "View election results (read-only, anyone can call)"
+      ],
+      "discriminator": [
+        171,
+        239,
+        19,
+        249,
+        8,
+        219,
+        74,
+        172
+      ],
+      "accounts": [
+        {
+          "name": "election"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "initialize_election",
+      "docs": [
+        "Creates a new election"
+      ],
+      "discriminator": [
+        59,
+        166,
+        191,
+        126,
+        195,
+        0,
+        153,
+        168
+      ],
+      "accounts": [
+        {
+          "name": "election",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  108,
+                  101,
+                  99,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              },
+              {
+                "kind": "arg",
+                "path": "election_index"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "election_index",
+          "type": "u64"
+        },
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "candidate_names",
+          "type": {
+            "vec": "string"
+          }
+        },
+        {
+          "name": "positive_votes_per_voter",
+          "type": "u8"
+        },
+        {
+          "name": "negative_votes_per_voter",
+          "type": "u8"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Election",
+      "discriminator": [
+        68,
+        191,
+        164,
+        85,
+        35,
+        105,
+        152,
+        202
+      ]
+    },
+    {
+      "name": "VoterBallot",
+      "discriminator": [
+        177,
+        14,
+        11,
+        80,
+        182,
+        69,
+        164,
+        96
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "TitleTooLong",
+      "msg": "Election title too long (max 200 characters)"
+    },
+    {
+      "code": 6001,
+      "name": "CandidateNameTooLong",
+      "msg": "Candidate name too long (max 50 characters)"
+    },
+    {
+      "code": 6002,
+      "name": "NotEnoughCandidates",
+      "msg": "Must have at least 2 candidates"
+    },
+    {
+      "code": 6003,
+      "name": "TooManyCandidates",
+      "msg": "Too many candidates (max 20)"
+    },
+    {
+      "code": 6004,
+      "name": "InvalidVoteConfig",
+      "msg": "Invalid vote configuration (must have at least 1 positive or negative vote)"
+    },
+    {
+      "code": 6005,
+      "name": "ElectionNotActive",
+      "msg": "Election is not active"
+    },
+    {
+      "code": 6006,
+      "name": "AlreadyVoted",
+      "msg": "Already voted in this election"
+    },
+    {
+      "code": 6007,
+      "name": "InvalidCandidateIndex",
+      "msg": "Invalid candidate index"
+    },
+    {
+      "code": 6008,
+      "name": "TooManyPositiveVotes",
+      "msg": "Too many positive votes"
+    },
+    {
+      "code": 6009,
+      "name": "TooManyNegativeVotes",
+      "msg": "Too many negative votes"
+    },
+    {
+      "code": 6010,
+      "name": "DuplicateVote",
+      "msg": "Cannot vote for same candidate twice"
+    },
+    {
+      "code": 6011,
+      "name": "UnauthorizedClose",
+      "msg": "Only election authority can close election"
+    }
+  ],
+  "types": [
+    {
+      "name": "Candidate",
+      "docs": [
+        "Candidate information embedded in Election"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "positive_votes",
+            "type": "i64"
+          },
+          {
+            "name": "negative_votes",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Election",
+      "docs": [
+        "Main election account - stores election metadata"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "candidates",
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "Candidate"
+                }
+              }
+            }
+          },
+          {
+            "name": "positive_votes_per_voter",
+            "type": "u8"
+          },
+          {
+            "name": "negative_votes_per_voter",
+            "type": "u8"
+          },
+          {
+            "name": "total_voters",
+            "type": "u64"
+          },
+          {
+            "name": "is_active",
+            "type": "bool"
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VoterBallot",
+      "docs": [
+        "Voter ballot account - tracks what one voter voted for"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "voter",
+            "type": "pubkey"
+          },
+          {
+            "name": "election",
+            "type": "pubkey"
+          },
+          {
+            "name": "positive_votes_used",
+            "type": "bytes"
+          },
+          {
+            "name": "negative_votes_used",
+            "type": "bytes"
+          },
+          {
+            "name": "voted_at",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
+}
